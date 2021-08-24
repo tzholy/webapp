@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="..">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+    <meta name="keywords" content="painting, js, easeljs"/>
+    <meta name="description" content="painting"/>
+    <title>painting</title>
+	<link href="https://cdn.bootcdn.net/ajax/libs/jquery-mobile/1.4.5/jquery.mobile.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="painting/painting.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/EaselJS/1.0.2/easeljs.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/tweenjs/1.0.2/tweenjs.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/SoundJS/1.0.2/soundjs.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/PreloadJS/1.0.1/preloadjs.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
+    <!-- 
+	<link rel="stylesheet" href="libs/jquery/jquery.mobile-1.4.5.min.css">
+    <script src="libs/createjs/easeljs-NEXT.min.js"></script>
+    <script src="libs/createjs/tweenjs-NEXT.min.js"></script>
+    <script src="libs/createjs/soundjs-NEXT.min.js"></script>
+    <script src="libs/createjs/preloadjs-NEXT.min.js"></script>
+    <script src="libs/createjs/movieclip-NEXT.min.js"></script>
+    <script src="libs/createjs/webgl-NEXT.min.js"></script>
+	<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+    <script src="libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="libs/jquery/jquery.mobile-1.4.5.min.js"></script>
+     -->
+	<script src="js/common.js"></script>
+	<script src="js/color.js"></script>
+	<script src="painting/painter.js"></script>
+    <script src="painting/demo.js"></script>
+	<script>
+	</script>
+</head>
+<body onload="init();">
+<div data-role="page" id="index">
+    <!-- <div data-role="header" data-position="fixed"> -->
+	<div data-role="header">
+        <a href="#" data-icon="carat-l" data-iconpos="notext" data-rel="back"></a>
+        <h1>Painting</h1>
+        <a href="#" data-icon="bars" data-iconpos="notext" class="btn_menu"></a>
+        <div data-role="collapsible" data-collapsed="true" class="menu">
+            <ul data-role="listview">
+                <li><a href="#ask_wear" data-transition="slide">穿什么</a></li>
+                <li><a href="#ask_eat" data-transition="slide">吃什么</a></li>
+                <li><a href="#ask_go" data-transition="slide">怎么走</a></li>
+            </ul>
+        </div>
+    </div>
+    <div role="main" class="ui-content">
+        <div class="ui-body">
+			<div class="ui-field-contain1">
+				<button data-inline="true" data-mini="true" id="btn-imgImport">导入</button>
+				<button data-inline="true" data-mini="true" id="btn-imgExport">导出</button>
+				<button data-inline="true" data-mini="true" id="btn-paintGrid">栅格化</button>
+				<button data-inline="true" data-mini="true" id="btn-testFn">测试</button>
+				<button data-inline="true" data-mini="true" id="btn-restart" >restart</button>
+				<button data-inline="true" data-mini="true" id="btn-back" >back</button>
+				<button data-inline="true" data-mini="true" id="btn-forward" >forward</button>
+			</div>	
+			<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+				<label for="select-paintType">画笔</label>
+				<select id="select-paintType" class="select-paintType">
+					<option value="Zoom" >放大镜</option>
+					<option value="ClipRect" >裁剪1</option>
+					<option value="Move" >移动</option>
+					<option value="Pencel" selected>铅笔</option>
+					<option value="Line" >线</option>
+					<option value="Rect" >矩形</option>
+					<option value="Circle" >圆</option>
+				</select>
+				<label for="select-strokeWeight">笔尖</label>
+				<select id="select-strokeWeight" class="select-strokeWeight">
+					<option value="5" >5px</option>
+					<option value="10" selected>10px</option>
+					<option value="20" >20px</option>
+					<option value="30" >30px</option>
+				</select>
+				<label for="select-color">颜色</label>
+				<select id="select-color" class="select-color" data-native-menu="false" data-mini="true">
+				<!-- <select id="select-color" class="select-color" > -->
+					<option value="#000" style="color:#000">#000</option>
+					<option value="#fff" style="color:#fff">#fff</option>
+					<option value="#f00" style="color:#f00">#f00</option>
+					<option value="#0f0" style="color:#0f0">#0f0</option>
+					<option value="#00f" style="color:#00f">#00f</option>
+					<option value="#ff0" style="color:#ff0">#ff0</option>
+					<option value="#f0f" style="color:#f0f">#f0f</option>
+					<option value="#0ff" style="color:#0ff">#0ff</option>
+				</select>
+			</div>
+		 </div>
+		 <canvas id="demoCanvas" class="center_container" width="960" height="480">您的浏览器不支持canvas标签</canvas>
+		 <div id="canvas_img_container" style="display:none;"></div>
+		 <input id="importFile" type="file" accept="image/*" style="display:none;" data-role="none"/>
+		 <img id="canvasImg" class="canvasImg"/>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#index" data-icon="home" class="ui-btn-active ui-state-persist">painting</a></li>
+                <li><a href="#page_war" data-icon="comment">war</a></li>
+                <li><a href="#page_properties" data-icon="eye">properties</a></li>
+                <li><a href="#page_settings" data-icon="gear">settings</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
