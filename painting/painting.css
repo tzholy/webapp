@@ -1,0 +1,21 @@
+﻿.rabbon{
+	margin: 20px;
+}
+.rabbon-tr{
+	margin-top: 10px;
+}
+
+.input-test{
+	width: 30px;
+}
+
+#demoCanvas{
+    width: 100%;
+    height: auto;
+    background: #ccc;
+}
+
+.canvasImg{
+	width: 100%;
+	height: auto;
+}
