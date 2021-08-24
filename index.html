@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>webapp</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <meta name="keywords" content="webapp">
+  <meta name="description" content="webapp">
+  <meta name="referrer" content="always">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="//cdn.staticfile.org">
+  <link rel="dns-prefetch" href="//res.wx.qq.com">
+  <link rel="shortcut icon" href="/static/image/logo/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .message_content {
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .btn-inline {
+      margin: 0.2rem 0.5rem;
+    }
+
+    .link_block {
+      display: block;
+    }
+
+    .page_title {
+      margin: 1rem auto;
+      font-size: 2rem;
+      text-align: center;
+    }
+  </style>
+  <!--
+http://club.91holy.com/
+http://118.190.114.32/
+wrk -t4 -c2000 -d30s --latency "http://club.91holy.com/hello.txt"
+  -->
+</head>
+
+<body>
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h3 class="panel-title">Home</h3>
+    </div>
+    <div class="panel-body">
+      <h4>webapp</h4>
+      <ul class="list-group">
+        <li class="list-group-item"><a class="link_block" href="painting/index">painting</a></li>
+      </ul>
+    </div>
+    <div class="panel-foot"></div>
+  </div>
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/jquery.transit/0.9.12/jquery.transit.min.js"></script>
+  <script src="https://cdn.staticfile.org/touchjs/0.2.14/touch.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdn.staticfile.org/scrollup/2.4.1/jquery.scrollUp.min.js"></script>
+  <script>
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i]);
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // 获取csrftoken
+    var csrftoken = getCookie('csrftoken');
+    // console.log(csrftoken);
+
+    //Ajax call
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+      crossDomain: false, // obviates need for sameOrigin test
+      //请求前触发
+      beforeSend: function (xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    function requestApi(options) {
+      var ajaxParam = $.extend({
+        type: 'post',
+        dataType: 'json',
+        complete: function (jqXHR, textStatus) {
+          if (options.complete) {
+            options.complete(jqXHR, textStatus)
+          }
+        },
+        success: function (msg) {
+          if (msg.status == 200) {
+            if (options.success) {
+              options.success(msg, options);
+            } else {
+              addOutput(options.title + '[success]: ' + objToStr(msg.rows));
+            }
+          } else {
+            if (options.error) {
+              options.error(msg, options);
+            } else {
+              addOutput(options.title + '[error]: ' + msg.msg);
+            }
+          }
+        }
+      }, options.param)
+      if (options.before) {
+        options.before(ajaxParam.data);
+      }
+      $.ajax(ajaxParam);
+    }
+  </script>
+  <script>
+    $(function () {
+      $.scrollUp({
+        scrollName: "scrollUp",
+        topDistance: "300",
+        topSpeed: 300,
+        animation: "fade",
+        animationInSpeed: 200,
+        animationOutSpeed: 200,
+        scrollText: '<i class="fa fa-angle-up"></i>',
+        activeOverlay: !1
+      })
+    })
+  </script>
+  <script>
+    function addOutput(msg) {
+      var array = [];
+      array.push('<div class="message_content">');
+      array.push(msg);
+      array.push('</div>');
+      messageEle.append(array.join(''));
+    }
+
+    function clearOutput() {
+      messageEle.empty();
+    }
+  </script>
+</body>
+
+</html>
